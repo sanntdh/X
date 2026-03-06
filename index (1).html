@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Felicidad en Colombia — World Happiness Report 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05080f;
+  --panel:rgba(255,255,255,0.04);
+  --panel-border:rgba(255,255,255,0.09);
+  --text:#e8eeff;
+  --muted:#8892b0;
+  --accent:#ffd166;
+  --accent2:#06d6a0;
+  --accent3:#7aa6ff;
+  --gold:#ffd166;
+  --shadow:0 20px 60px rgba(0,0,0,.5);
+  --radius:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ═══ FONDO ATMOSFÉRICO ═══ */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 900px 600px at 15% -5%,  rgba(255,209,102,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 700px 500px at 85% 10%,  rgba(6,214,160,.05)   0%, transparent 55%),
+    radial-gradient(ellipse 1200px 800px at 50% 80%, rgba(122,166,255,.05) 0%, transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ═══ HERO ═══ */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:60px 24px;
+  overflow:hidden;
+}
+.hero-orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(80px);
+  opacity:.25;
+  animation:drift 12s ease-in-out infinite alternate;
+}
+.hero-orb-1{width:600px;height:600px;background:#ffd166;top:-200px;left:-150px;animation-delay:0s}
+.hero-orb-2{width:500px;height:500px;background:#06d6a0;bottom:-100px;right:-100px;animation-delay:-4s}
+.hero-orb-3{width:350px;height:350px;background:#7aa6ff;top:30%;left:55%;animation-delay:-8s}
+@keyframes drift{0%{transform:translate(0,0) scale(1)} 100%{transform:translate(30px,20px) scale(1.08)}}
+
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 18px;
+  border:1px solid rgba(255,209,102,.3);
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--gold);
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  background:rgba(255,209,102,.06);
+  backdrop-filter:blur(10px);
+  margin-bottom:28px;
+  position:relative;z-index:1;
+}
+.hero-badge::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 8px var(--gold);
+  animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+.hero h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(42px,7vw,90px);
+  font-weight:800;
+  line-height:1.0;
+  position:relative;z-index:1;
+  letter-spacing:-2px;
+}
+.hero h1 span{
+  background:linear-gradient(90deg,#ffd166,#f4a261,#06d6a0);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-sub{
+  margin-top:20px;
+  font-size:clamp(15px,2vw,20px);
+  color:var(--muted);
+  max-width:520px;
+  line-height:1.6;
+  position:relative;z-index:1;
+}
+.hero-score{
+  margin-top:52px;
+  display:inline-flex;
+  align-items:center;
+  gap:32px;
+  padding:24px 40px;
+  background:var(--panel);
+  border:1px solid var(--panel-border);
+  border-radius:var(--radius);
+  backdrop-filter:blur(16px);
+  position:relative;z-index:1;
+}
+.score-num{
+  font-family:'Syne',sans-serif;
+  font-size:64px;
+  font-weight:800;
+  color:var(--gold);
+  line-height:1;
+  text-shadow:0 0 40px rgba(255,209,102,.4);
+}
+.score-label{text-align:left}
+.score-label strong{display:block;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.score-label em{display:block;font-size:22px;font-style:normal;color:var(--text);font-family:'Syne',sans-serif;font-weight:700}
+.score-divider{width:1px;height:60px;background:var(--panel-border)}
+.scroll-hint{
+  position:absolute;
+  bottom:32px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  animation:bounce 2.5s ease-in-out infinite;
+  z-index:1;
+}
+.scroll-hint svg{opacity:.5}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* ═══ WRAP ═══ */
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+/* ═══ SECCIONES ═══ */
+.section{padding:80px 0}
+.section-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(28px,3.5vw,44px);
+  font-weight:800;
+  letter-spacing:-1px;
+  margin-bottom:12px;
+}
+.section-title span{color:var(--accent)}
+.section-desc{color:var(--muted);max-width:560px;line-height:1.7;margin-bottom:40px;font-size:15px}
+
+/* ═══ CARD BASE ═══ */
+.card{
+  background:var(--panel);
+  border:1px solid var(--panel-border);
+  border-radius:var(--radius);
+  backdrop-filter:blur(10px);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transition:border-color .3s,transform .3s;
+}
+.card:hover{border-color:rgba(255,255,255,.16);transform:translateY(-2px)}
+
+/* ═══ INTRO CARD ═══ */
+.intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media(max-width:750px){.intro-grid{grid-template-columns:1fr}}
+.intro-card{padding:32px}
+.intro-card h3{
+  font-family:'Syne',sans-serif;
+  font-weight:700;font-size:18px;
+  color:var(--accent3);
+  margin-bottom:12px;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  font-size:12px;
+}
+.intro-card p{color:var(--muted);line-height:1.8;font-size:15px;text-align:justify}
+
+/* ═══ VARIABLES GRID ═══ */
+.vars-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;
+  margin-top:10px;
+}
+.var-item{
+  padding:20px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--panel-border);
+  border-radius:14px;
+  transition:background .3s,border-color .3s,transform .3s;
+  position:relative;
+  overflow:hidden;
+}
+.var-item::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  opacity:0;
+  transition:opacity .3s;
+}
+.var-item:hover{background:rgba(255,255,255,.06);border-color:rgba(255,209,102,.25);transform:translateY(-3px)}
+.var-item:hover::before{opacity:1}
+.var-icon{font-size:28px;margin-bottom:10px}
+.var-item h4{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.var-item p{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* ═══ GALERÍA ═══ */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:16px;
+  margin-top:10px;
+}
+@media(max-width:900px){.gallery{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.gallery{grid-template-columns:1fr}}
+.country-card{
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid var(--panel-border);
+  cursor:pointer;
+  transition:transform .3s,box-shadow .3s,border-color .3s;
+  position:relative;
+}
+.country-card:hover{transform:scale(1.04);box-shadow:0 16px 40px rgba(0,0,0,.5);border-color:rgba(255,255,255,.2)}
+.country-card img{width:100%;height:180px;object-fit:cover;display:block;filter:brightness(.9);transition:filter .3s}
+.country-card:hover img{filter:brightness(1.05)}
+.country-name{
+  padding:12px 14px;
+  font-family:'Syne',sans-serif;
+  font-weight:700;
+  font-size:13px;
+  color:var(--text);
+  background:var(--panel);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.country-rank{font-size:11px;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:400}
+
+/* ═══ ANÁLISIS (imagen + texto) ═══ */
+.analysis-card{
+  padding:36px;
+  margin-bottom:20px;
+}
+.analysis-inner{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:36px;
+  align-items:center;
+}
+.analysis-inner.reverse{direction:rtl}
+.analysis-inner.reverse > *{direction:ltr}
+@media(max-width:750px){
+  .analysis-inner,.analysis-inner.reverse{grid-template-columns:1fr;direction:ltr}
+}
+.analysis-img{
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid var(--panel-border);
+  position:relative;
+}
+.analysis-img::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 60%,rgba(5,8,15,.6));
+  pointer-events:none;
+}
+.analysis-img img{width:100%;height:auto;display:block}
+.analysis-text{}
+.analysis-label{
+  display:inline-block;
+  font-size:11px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  font-weight:700;
+  padding:5px 12px;
+  border-radius:999px;
+  margin-bottom:16px;
+  background:rgba(255,209,102,.1);
+  color:var(--gold);
+  border:1px solid rgba(255,209,102,.2);
+}
+.analysis-text h3{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(18px,2vw,24px);
+  font-weight:800;
+  margin-bottom:14px;
+  line-height:1.2;
+}
+.analysis-text p{
+  color:var(--muted);
+  line-height:1.8;
+  font-size:15px;
+  text-align:justify;
+}
+
+/* Colores de label alternados */
+.analysis-card:nth-child(2n) .analysis-label{background:rgba(6,214,160,.1);color:var(--accent2);border-color:rgba(6,214,160,.2)}
+.analysis-card:nth-child(3n) .analysis-label{background:rgba(122,166,255,.1);color:var(--accent3);border-color:rgba(122,166,255,.2)}
+
+/* ═══ CONCLUSIÓN ═══ */
+.conclusion-box{
+  padding:40px;
+  border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(255,209,102,.07),rgba(6,214,160,.05));
+  border:1px solid rgba(255,209,102,.2);
+  position:relative;
+  overflow:hidden;
+}
+.conclusion-box::before{
+  content:'"';
+  position:absolute;
+  top:-20px;left:20px;
+  font-size:200px;
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  color:rgba(255,209,102,.06);
+  line-height:1;
+  pointer-events:none;
+}
+.conclusion-box p{
+  font-size:clamp(15px,1.5vw,18px);
+  line-height:1.9;
+  color:#c8d4f0;
+  text-align:justify;
+  position:relative;z-index:1;
+}
+
+/* ═══ FOOTER ═══ */
+footer{
+  background:rgba(255,255,255,.02);
+  border-top:1px solid var(--panel-border);
+  padding:60px 24px 40px;
+  text-align:center;
+}
+.footer-inner{max-width:1140px;margin:0 auto}
+.footer-title{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--text);margin-bottom:24px}
+.team-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;
+  margin-bottom:40px;
+}
+.team-card{
+  padding:20px;
+  background:var(--panel);
+  border:1px solid var(--panel-border);
+  border-radius:14px;
+}
+.team-name{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--text);margin-bottom:6px}
+.team-email{font-size:12px;color:var(--accent3)}
+.footer-source{
+  margin-top:24px;
+  font-size:13px;
+  color:var(--muted);
+}
+.footer-source a{color:var(--gold);text-decoration:none;font-weight:600}
+.footer-source a:hover{text-decoration:underline}
+.footer-copy{margin-top:12px;font-size:12px;color:rgba(255,255,255,.2)}
+
+/* ═══ SEPARATOR ═══ */
+.sep{
+  width:60px;height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  border-radius:999px;
+  margin:0 0 32px 0;
+}
+
+/* ═══ ANIMACIONES DE ENTRADA ═══ */
+.fade-up{
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity .7s ease,transform .7s ease;
+}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+
+  <div class="hero-badge">World Happiness Report 2025</div>
+
+  <h1>Felicidad<br>en <span>Colombia</span></h1>
+  <p class="hero-sub">Análisis de los factores que determinan el bienestar subjetivo de los colombianos y su posición en el panorama global</p>
+
+  <div class="hero-score">
+    <div class="score-num">5.63</div>
+    <div class="score-divider"></div>
+    <div class="score-label">
+      <strong>Ladder Score</strong>
+      <em>Posición #64</em>
+    </div>
+    <div class="score-divider"></div>
+    <div class="score-label">
+      <strong>Región</strong>
+      <em>Latinoamérica</em>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    Explorar
+  </div>
+</section>
+
+<!-- ═══ INTRODUCCIÓN ═══ -->
+<section class="section">
+  <div class="wrap">
+    <div class="fade-up">
+      <p class="section-title">¿Qué mide el<br><span>Happiness Report?</span></p>
+      <div class="sep"></div>
+    </div>
+    <div class="intro-grid fade-up">
+      <div class="card intro-card">
+        <h3>📊 Sobre el índice</h3>
+        <p>El bienestar subjetivo constituye un indicador esencial del desarrollo humano. El World Happiness Report evalúa la felicidad de los países mediante el <strong style="color:var(--text)">Ladder Score</strong>, una medida basada en la percepción que las personas tienen sobre su calidad de vida. Este índice integra factores económicos, sociales, institucionales y culturales.</p>
+      </div>
+      <div class="card intro-card">
+        <h3>🇨🇴 Sobre Colombia</h3>
+        <p>El presente informe analiza la situación de Colombia a partir de los datos oficiales del informe 2025 y de visualizaciones generadas mediante herramientas de análisis de datos. El objetivo es identificar los factores que explican su nivel de felicidad y compararlo con distintos grupos de países a nivel global y regional.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ GALERÍA ═══ -->
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="fade-up">
+      <p class="section-title">Felicidad<br><span>alrededor del mundo</span></p>
+      <div class="sep"></div>
+      <p class="section-desc">Contextos sociales contrastantes entre países con distintos niveles de bienestar, reflejando diferencias en estabilidad, cohesión social y calidad de vida.</p>
+    </div>
+    <div class="gallery fade-up">
+
+      <div class="country-card">
+        <img src="felicidad_colombia.jpg" alt="Colombia" onerror="this.src='https://flagcdn.com/w320/co.png'">
+        <div class="country-name">Colombia <span class="country-rank">#64</span></div>
+      </div>
+
+      <div class="country-card">
+        <img src="felicidad_argentina.jpg" alt="Argentina" onerror="this.src='https://flagcdn.com/w320/ar.png'">
+        <div class="country-name">Argentina <span class="country-rank">#52</span></div>
+      </div>
+
+      <div class="country-card">
+        <img src="Finlandia_felicidad.jpg" alt="Finlandia" onerror="this.src='https://flagcdn.com/w320/fi.png'">
+        <div class="country-name">Finlandia <span class="country-rank">#1</span></div>
+      </div>
+
+      <div class="country-card">
+        <img src="felicidad_islandia.jpg" alt="Islandia" onerror="this.src='https://flagcdn.com/w320/is.png'">
+        <div class="country-name">Islandia <span class="country-rank">#3</span></div>
+      </div>
+
+      <div class="country-card">
+        <img src="tristeza_afghanistan.jpg" alt="Afganistán" onerror="this.src='https://flagcdn.com/w320/af.png'">
+        <div class="country-name">Afganistán <span class="country-rank">#143</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VARIABLES ═══ -->
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="fade-up">
+      <p class="section-title">Variables que<br><span>explican la felicidad</span></p>
+      <div class="sep"></div>
+    </div>
+    <div class="vars-grid fade-up">
+      <div class="var-item"><div class="var-icon">💰</div><h4>PIB per cápita</h4><p>Refleja el nivel de ingreso promedio y capacidad económica del país.</p></div>
+      <div class="var-item"><div class="var-icon">🤝</div><h4>Apoyo social</h4><p>Mide redes de ayuda familiar y comunitaria disponibles para los ciudadanos.</p></div>
+      <div class="var-item"><div class="var-icon">🏥</div><h4>Esperanza de vida</h4><p>Indica las condiciones de salud y expectativa de vida saludable.</p></div>
+      <div class="var-item"><div class="var-icon">🗽</div><h4>Libertad para decidir</h4><p>Evalúa la autonomía personal y libertad de elección en la vida diaria.</p></div>
+      <div class="var-item"><div class="var-icon">💛</div><h4>Generosidad</h4><p>Representa las conductas solidarias y de donación en la población.</p></div>
+      <div class="var-item"><div class="var-icon">🏛️</div><h4>Percepción de corrupción</h4><p>Mide el nivel de confianza institucional y transparencia del gobierno.</p></div>
+      <div class="var-item"><div class="var-icon">🔮</div><h4>Distopía + residual</h4><p>Factores no capturados por las otras variables del modelo estadístico.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ANÁLISIS ═══ -->
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="fade-up">
+      <p class="section-title">Análisis<br><span>por comparación</span></p>
+      <div class="sep"></div>
+    </div>
+
+    <!-- TENDENCIA HISTÓRICA -->
+    <div class="card analysis-card fade-up">
+      <div class="analysis-inner">
+        <div class="analysis-img">
+          <img src="trend_of_Colombias_life_evaluation_over_the_years.png" alt="Tendencia histórica Colombia">
+        </div>
+        <div class="analysis-text">
+          <span class="analysis-label">Tendencia histórica</span>
+          <h3>Felicidad de Colombia a lo largo de los años</h3>
+          <p>Se puede observar cómo Colombia ha sufrido distintas fluctuaciones en la felicidad a lo largo de los años, esto debido a factores económicos, sociales y políticos. Ejemplos son los distintos presidentes que han gobernado el país, el creciente conflicto armado o la falta de apoyo social dependiendo del gobierno de turno.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VS PEORES -->
+    <div class="card analysis-card fade-up">
+      <div class="analysis-inner reverse">
+        <div class="analysis-img">
+          <img src="comparacion_los_mejores.png" alt="Colombia vs países menos felices">
+        </div>
+        <div class="analysis-text">
+          <span class="analysis-label">Colombia vs. menos felices</span>
+          <h3>Colombia frente a los países menos felices</h3>
+          <p>Cuando comparamos a Colombia con los países menos felices se evidencia la gran diferencia en apoyo social, producto interno bruto (PIB), libertad para tomar decisiones y la expectativa de vida de cada país, claramente con Colombia a la delantera en todos estos aspectos.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VS MEJORES -->
+    <div class="card analysis-card fade-up">
+      <div class="analysis-inner">
+        <div class="analysis-img">
+          <img src="comparacion_los_peores.png" alt="Colombia vs países más felices">
+        </div>
+        <div class="analysis-text">
+          <span class="analysis-label">Colombia vs. más felices</span>
+          <h3>Colombia frente a los países más felices</h3>
+          <p>Al enfrentar a Colombia contra los países más felices se puede observar que hay una diferencia moderada. Esto se le atribuye en gran parte al producto interno bruto, la percepción de corrupción y el apoyo social que tienen los tres mejores países en comparación a Colombia.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VS SU RANGO -->
+    <div class="card analysis-card fade-up">
+      <div class="analysis-inner reverse">
+        <div class="analysis-img">
+          <img src="comparación_con_los_de_su_rango.png" alt="Colombia vs países de su rango">
+        </div>
+        <div class="analysis-text">
+          <span class="analysis-label">Países similares</span>
+          <h3>Colombia frente a países de su rango</h3>
+          <p>A pesar de que Colombia es de los países que menos producto interno bruto acumula en comparación con los otros 5 países, es de los que más apoyo social y más libertad para tomar decisiones tiene. Gracias a esto se logra ubicar como el segundo más feliz entre los países que están en su rango.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VS LATAM -->
+    <div class="card analysis-card fade-up">
+      <div class="analysis-inner">
+        <div class="analysis-img">
+          <img src="comparacion_con_latinoamérica.png" alt="Colombia vs Latinoamérica">
+        </div>
+        <div class="analysis-text">
+          <span class="analysis-label">Contexto regional</span>
+          <h3>Colombia frente a Latinoamérica</h3>
+          <p>Colombia tiene un buen desempeño en PIB y apoyo social en comparación con el resto de países de Latinoamérica, pero lo afecta la poca generosidad, la percepción de la corrupción y la expectativa de vida frente a los demás países de la región, ubicándose en el puesto 7 de los 10 países evaluados.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ CONCLUSIONES ═══ -->
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="fade-up">
+      <p class="section-title"><span>Conclusiones</span></p>
+      <div class="sep"></div>
+    </div>
+    <div class="conclusion-box fade-up">
+      <p>Colombia tiene muy buen producto interno bruto y apoyo social en comparación al resto de países de Latinoamérica, pero lo afecta la poca generosidad del país, la percepción de la corrupción y la expectativa de vida en comparación a los otros países, lo que nos hace ubicarnos en el <strong style="color:var(--gold)">puesto 7 de los 10 países evaluados</strong> en la gráfica regional. Sin embargo, en el contexto global, la fortaleza del tejido social colombiano y la alta percepción de libertad individual posicionan a Colombia de manera competitiva frente a economías con mayor PIB, demostrando que la felicidad no es únicamente un indicador económico sino profundamente humano.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-title">Equipo investigador</div>
+    <div class="team-grid">
+      <div class="team-card"><div class="team-name">Santiago Ariza</div><div class="team-email">cadenas@utb.edu.co</div></div>
+      <div class="team-card"><div class="team-name">Hillary Feria</div><div class="team-email">feriah@utb.edu.co</div></div>
+      <div class="team-card"><div class="team-name">Leonel Almanza</div><div class="team-email">lealmanza@utb.edu.co</div></div>
+      <div class="team-card"><div class="team-name">Victor Julio</div><div class="team-email">vijulio@utb.edu.co</div></div>
+    </div>
+    <p class="footer-source">
+      <strong style="color:var(--text)">Estudiantes Data Science · UTB 2026</strong><br>
+      Fuente de datos: <a href="https://www.worldhappiness.report/ed/2025/" target="_blank">World Happiness Report 2025</a>
+    </p>
+    <p class="footer-copy">© 2026 · Análisis académico con fines educativos</p>
+  </div>
+</footer>
+
+<script>
+// Intersection Observer para animaciones de entrada
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      // stagger para children si los tiene
+      const children = e.target.querySelectorAll('.var-item,.country-card,.team-card');
+      children.forEach((el,i)=>{
+        setTimeout(()=>el.style.cssText+=';opacity:1;transform:translateY(0)',i*80);
+      });
+    }
+  });
+},{threshold:0.1});
+
+document.querySelectorAll('.fade-up').forEach(el=>{
+  observer.observe(el);
+  // Pre-set para items de galería/vars
+  el.querySelectorAll('.var-item,.country-card,.team-card').forEach(child=>{
+    child.style.cssText+='opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease';
+  });
+});
+</script>
+</body>
+</html>
